@@ -2,6 +2,13 @@
 
 # Display a menu and prompt the user for thier choice 
 
+if ! command -v aws &> /dev/null
+then
+    echo "aws could not be found"
+    exit
+fi
+
+
 echo "Select an option:"
 echo "1. Create a new Bucket"
 echo "2. Upload the file to the exisiting bucket"
@@ -43,13 +50,3 @@ case "$choice" in
     ;;
 esac
 
-# if aws s3api head-bucket --bucket "$BUCKETNAME"; then
-#     echo "Exists"
-#     if [ -f $FILE ]; then
-        
-# else 
-#     echo "Bucket Does not Exists, Do you want to create the new Bucket?"
-#     read answer
-#     if [ $answer eq "yes" ]; then
-         
-# fi
