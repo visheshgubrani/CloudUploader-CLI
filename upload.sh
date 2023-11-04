@@ -9,6 +9,7 @@ then
 fi
 
 
+
 echo "Select an option:"
 echo "1. Create a new Bucket"
 echo "2. Upload the file to the exisiting bucket"
@@ -29,7 +30,12 @@ function add_to_existing_bucket() {
     if aws s3api head-bucket --bucket "$existing_bucket_name"; then
         read -p "Enter the file name with path to upload to aws s3 bucket: " file
         if [ -f $file ]; then
-             aws s3 cp $file s3://$existing_bucket_name/
+            aws s3 cp $file s3://$existing_bucket_name/
+            if [ $? -eq 0 ]; then
+                echo "Upload Sucessful"
+            else
+                echo "Upload failed"
+            fi
         else
             echo "File does not exists"
         fi
