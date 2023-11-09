@@ -21,6 +21,7 @@ function new_bucket() {
     read -p "Enter the name of the bucket: " new_bucket_name
     read -p "Enter the region you want to create your new bucket in: " new_bucket_region
     aws s3api create-bucket --bucket $new_bucket_name --region $new_bucket_region --create-bucket-configuration LocationConstraint=$new_bucket_region
+    
 }
 
 # Function to add the file to the existing bucket
@@ -29,20 +30,22 @@ function add_to_existing_bucket() {
     read -p "Enter the name of the bucket: " existing_bucket_name
     if aws s3api head-bucket --bucket "$existing_bucket_name"; then
         read -p "Enter the file name with path to upload to aws s3 bucket: " file
+        file=$(eval echo "$file")
         if [ -f $file ]; then
-            aws s3 cp $file s3://$existing_bucket_name/
+            aws s3 cp $file s3://$existing_bucket_name/ --no-progress | pv -lep -s $(stat -c%s "$file")
             if [ $? -eq 0 ]; then
-                echo "Upload Sucessful"
+                echo "Uploaded $file Sucessfully"
             else
                 echo "Upload failed"
             fi
         else
-            echo "File does not exists"
+            echo "$file does not exists"
         fi
     else
         echo "Bucket Does not Exists"
     fi
 }
+
 
 # Check the users choice and perform the corresponding action
 
